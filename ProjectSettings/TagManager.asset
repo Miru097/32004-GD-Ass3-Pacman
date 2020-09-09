@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - PowerPellet1
+  - Heart
+  - Audio_Intro
+  - Audio_Normal
   layers:
   - Default
   - TransparentFX

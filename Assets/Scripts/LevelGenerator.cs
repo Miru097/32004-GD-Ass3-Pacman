@@ -41,7 +41,8 @@ public class LevelGenerator : MonoBehaviour
     private static int[] RotationC = { 59, 64, 70, 101, 109, 127, 135, 154, 190 };//positie90 in UL
     private static int[] RotationD = { 62, 68, 104, 152, 188, 191 };//180 in UL
     private static int Tjuc = 14;
-    private GameObject[] powerPellets = new GameObject[4];
+    private GameObject[] powerPellets = new GameObject[3];
+    private GameObject[] heart = new GameObject[2];
 
 
     //public List<GameObject> map = new List<GameObject>();
@@ -55,6 +56,7 @@ public class LevelGenerator : MonoBehaviour
         LowerLeft();
         LowerRight();
         PowerPellets();
+        Heart();
 
     }
 
@@ -206,11 +208,19 @@ public class LevelGenerator : MonoBehaviour
     }
     private void PowerPellets()
     {
-        for (int i = 1; i < 4; i++)
+        for (int i = 0; i < 3; i++)
         {
             powerPellets[i] = Instantiate(GameObject.FindWithTag("PowerPellet1"), new Vector2(12, 12), Quaternion.identity);
         }
-        powerPellets[2].transform.position = new Vector2(-13, -10);
-        powerPellets[3].transform.position = new Vector2(12, -10);
+        powerPellets[1].transform.position = new Vector2(-13, -10);
+        powerPellets[2].transform.position = new Vector2(12, -10);
+    }
+    private void Heart()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            heart[i] = Instantiate(GameObject.FindWithTag("Heart"), new Vector2(-13, -14), Quaternion.identity);
+        }
+        heart[1].transform.position = new Vector2(-12, -14);
     }
 }
