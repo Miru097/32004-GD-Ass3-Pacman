@@ -41,7 +41,7 @@ public class LevelGenerator : MonoBehaviour
     private static int[] RotationC = { 59, 64, 70, 101, 109, 127, 135, 154, 190 };//positie90 in UL
     private static int[] RotationD = { 62, 68, 104, 152, 188, 191 };//180 in UL
     private static int Tjuc = 14;
-
+    private GameObject[] powerPellets = new GameObject[4];
 
 
     //public List<GameObject> map = new List<GameObject>();
@@ -54,6 +54,8 @@ public class LevelGenerator : MonoBehaviour
         UpperRight();
         LowerLeft();
         LowerRight();
+        PowerPellets();
+
     }
 
     // Update is called once per frame
@@ -74,7 +76,7 @@ public class LevelGenerator : MonoBehaviour
                 i++;
             }
         }
-
+        Destroy(upperLeft[44]);
         foreach (int i in RotationLine)
         {
             upperLeft[i].transform.rotation = Quaternion.Euler(0f, 0f, 90.0f);
@@ -107,7 +109,7 @@ public class LevelGenerator : MonoBehaviour
                 if (i <= 210) i++;
             }
         }
-
+        Destroy(upperRight[44]);
         foreach (int i in RotationLine)
         {
             upperRight[i].transform.Rotate(0f, 0f, -90.0f);
@@ -141,6 +143,7 @@ public class LevelGenerator : MonoBehaviour
                 if (i < lowerLeft.Length) i++;
             }
         }
+        Destroy(lowerLeft[44]);
         lowerLeft[Tjuc].GetComponent<SpriteRenderer>().flipY = true;
         lowerLeft[182] = Instantiate(gameObjects[4], new Vector3(-1, -1), Quaternion.identity);
 
@@ -177,7 +180,7 @@ public class LevelGenerator : MonoBehaviour
                 if (i <= 210) i++;
             }
         }
-
+        Destroy(lowerRight[44]);
         lowerRight[Tjuc].GetComponent<SpriteRenderer>().flipX = true;
         lowerRight[Tjuc].GetComponent<SpriteRenderer>().flipY = true;
         lowerRight[182] = Instantiate(gameObjects[4], new Vector3(0, -1), Quaternion.identity);
@@ -200,5 +203,14 @@ public class LevelGenerator : MonoBehaviour
         {
             lowerRight[i].transform.Rotate(0f, 0f, 90f);
         }
+    }
+    private void PowerPellets()
+    {
+        for (int i = 1; i < 4; i++)
+        {
+            powerPellets[i] = Instantiate(GameObject.FindWithTag("PowerPellet1"), new Vector2(12, 12), Quaternion.identity);
+        }
+        powerPellets[2].transform.position = new Vector2(-13, -10);
+        powerPellets[3].transform.position = new Vector2(12, -10);
     }
 }
