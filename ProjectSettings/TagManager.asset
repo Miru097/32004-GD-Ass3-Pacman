@@ -11,6 +11,7 @@ TagManager:
   - SE_notEat
   - PowerPellet1
   - map
+  - Pacman
   layers:
   - Default
   - TransparentFX
