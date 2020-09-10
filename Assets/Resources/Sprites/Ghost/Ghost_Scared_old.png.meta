@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4844fb23e6eb3944a90c192c2672c7c3
+guid: bfe993f14f5f17f4a983e893858a6bea
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -96,9 +96,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 162
-        width: 144
-        height: 108
+        y: 0
+        width: 121
+        height: 121
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -116,10 +116,10 @@ TextureImporter:
       name: Ghost_Scared_1
       rect:
         serializedVersion: 2
-        x: 11
-        y: 21
-        width: 126
-        height: 108
+        x: 121
+        y: 0
+        width: 121
+        height: 121
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

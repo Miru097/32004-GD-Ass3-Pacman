@@ -8,6 +8,7 @@ TagManager:
   - Heart
   - Audio_Intro
   - Audio_Normal
+  - SE_notEat
   layers:
   - Default
   - TransparentFX

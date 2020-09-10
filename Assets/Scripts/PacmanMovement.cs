@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NormalState : MonoBehaviour
+public class PacmanMovement : MonoBehaviour
 {
     private bool switchedOn = false;
     // Start is called before the first frame update
     void Start()
     {
-        //GameObject.FindWithTag("Audio_Normal").GetComponent<AudioSource>().PlayDelayed(3.7f);
+        
     }
 
     // Update is called once per frame
@@ -16,7 +16,7 @@ public class NormalState : MonoBehaviour
     {
         if (switchedOn == false && GameObject.FindWithTag("Audio_Intro").GetComponent<AudioSource>().isPlaying == false)
         {
-            GameObject.FindWithTag("Audio_Normal").GetComponent<AudioSource>().Play();
+            GameObject.FindWithTag("SE_notEat").GetComponent<AudioSource>().Play();
             switchedOn = true;
         }
     }
