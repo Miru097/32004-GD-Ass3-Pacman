@@ -27,12 +27,13 @@ public class LevelGenerator : MonoBehaviour
                         {0,0,0,0,0,0,5,0,0,0,4,0,0,0},
                        };
     [SerializeField]
-    private GameObject[] gameObjects = default;
+    private GameObject[] MapGameObjects = default;
     private GameObject[] upperLeft = new GameObject[211];
     private GameObject[] upperRight = new GameObject[211];
-    private GameObject[] lowerLeft = new GameObject[210];
-    private GameObject[] lowerRight = new GameObject[210];
+    private GameObject[] lowerLeft = new GameObject[197];
+    private GameObject[] lowerRight = new GameObject[197];
 
+    private GameObject map = default;
 
     private static int[] RotationLine = {
         15,28,29,42,43,45,48,50,54,56,57,71,85,99,106,107,113,120,121,126,134,140,146,148,160,162,163,174,176,177,193,207};
@@ -41,16 +42,14 @@ public class LevelGenerator : MonoBehaviour
     private static int[] RotationC = { 59, 64, 70, 101, 109, 127, 135, 154, 190 };//positie90 in UL
     private static int[] RotationD = { 62, 68, 104, 152, 188, 191 };//180 in UL
     private static int Tjuc = 14;
-    private GameObject[] powerPellets = new GameObject[3];
-    private GameObject[] heart = new GameObject[2];
+    private GameObject[] powerPellets = new GameObject[4];
+    private GameObject[] heart = new GameObject[3];
 
-
-    //public List<GameObject> map = new List<GameObject>();
-    //public Sprite[] sprite = new Sprite[8];
 
     // Start is called before the first frame update
     void Start()
     {
+        map = GameObject.FindWithTag("map");
         UpperLeft();
         UpperRight();
         LowerLeft();
@@ -74,7 +73,9 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int column = 0; column < Column; column++)
             {
-                upperLeft[i] = Instantiate(gameObjects[levelMap[row, column]], new Vector2(x + column, y - row), Quaternion.identity);
+                upperLeft[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x + column, y - row), Quaternion.identity);
+                upperLeft[i].transform.parent = map.transform;
+                upperLeft[i].name = "MapUpperLeft" + i;
                 i++;
             }
         }
@@ -95,7 +96,6 @@ public class LevelGenerator : MonoBehaviour
         {
             upperLeft[i].transform.rotation = Quaternion.Euler(0f, 0f, 180.0f);
         }
-
     }
     private void UpperRight()
     {
@@ -106,7 +106,9 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int column = 0; column < Column; column++)
             {
-                upperRight[i] = Instantiate(upperLeft[i], new Vector2(x - column, y - row), Quaternion.identity);
+                upperRight[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x - column, y - row), Quaternion.identity);
+                upperRight[i].transform.parent = map.transform;
+                upperRight[i].name = "MapUpperRight" + i;
                 //upperRight[i].GetComponent<SpriteRenderer>().flipX = true;
                 if (i <= 210) i++;
             }
@@ -141,14 +143,18 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int column = 0; column < Column; column++)
             {
-                lowerLeft[i] = Instantiate(gameObjects[levelMap[row, column]], new Vector2(x + column, y + row), Quaternion.identity);
+                lowerLeft[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x + column, y + row), Quaternion.identity);
+                lowerLeft[i].transform.parent = map.transform;
+                lowerLeft[i].name = "MapLowerLeft" + i;
                 if (i < lowerLeft.Length) i++;
             }
         }
         Destroy(lowerLeft[44]);
         lowerLeft[Tjuc].GetComponent<SpriteRenderer>().flipY = true;
-        lowerLeft[182] = Instantiate(gameObjects[4], new Vector3(-1, -1), Quaternion.identity);
-
+        Destroy(lowerLeft[182]);
+        lowerLeft[182] = Instantiate(MapGameObjects[4], new Vector3(-1, -1), Quaternion.identity);
+        lowerLeft[182].transform.parent = map.transform;
+        lowerLeft[182].name = "MapLowerLeft182";
         foreach (int i in RotationLine)
         {
             if (i <= 196) lowerLeft[i].transform.Rotate(0f, 0f, -90.0f);
@@ -178,15 +184,19 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int column = 0; column < Column; column++)
             {
-                lowerRight[i] = Instantiate(gameObjects[levelMap[row, column]], new Vector2(x - column, y + row), Quaternion.identity);
+                lowerRight[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x - column, y + row), Quaternion.identity);
+                lowerRight[i].transform.parent = map.transform;
+                lowerRight[i].name = "MapLowerRight" + i;
                 if (i <= 210) i++;
             }
         }
         Destroy(lowerRight[44]);
         lowerRight[Tjuc].GetComponent<SpriteRenderer>().flipX = true;
         lowerRight[Tjuc].GetComponent<SpriteRenderer>().flipY = true;
-        lowerRight[182] = Instantiate(gameObjects[4], new Vector3(0, -1), Quaternion.identity);
-
+        Destroy(lowerRight[182]);
+        lowerRight[182] = Instantiate(MapGameObjects[4], new Vector3(0, -1), Quaternion.identity);
+        lowerRight[182].transform.parent = map.transform;
+        lowerRight[182].name = "MapLowerRight182";
         foreach (int i in RotationLine)
         {
             if (i <= 196) lowerRight[i].transform.Rotate(0f, 0f, -90.0f);
@@ -208,19 +218,25 @@ public class LevelGenerator : MonoBehaviour
     }
     private void PowerPellets()
     {
-        for (int i = 0; i < 3; i++)
+        powerPellets[0] = GameObject.FindWithTag("PowerPellet1");
+        powerPellets[1] = Instantiate(powerPellets[0], new Vector2(12, 12), Quaternion.identity);
+        powerPellets[2] = Instantiate(powerPellets[0], new Vector2(-13, -10), Quaternion.identity);
+        powerPellets[3] = Instantiate(powerPellets[0], new Vector2(12, -10), Quaternion.identity);
+        for(i = 1; i < 4; i++)
         {
-            powerPellets[i] = Instantiate(GameObject.FindWithTag("PowerPellet1"), new Vector2(12, 12), Quaternion.identity);
+            int a = i + 1;
+            powerPellets[i].name = "PowerPellets" + a;
         }
-        powerPellets[1].transform.position = new Vector2(-13, -10);
-        powerPellets[2].transform.position = new Vector2(12, -10);
     }
+
     private void Heart()
     {
-        for (int i = 0; i < 2; i++)
-        {
-            heart[i] = Instantiate(GameObject.FindWithTag("Heart"), new Vector2(-13, -14), Quaternion.identity);
-        }
-        heart[1].transform.position = new Vector2(-12, -14);
+        heart[0] = GameObject.FindWithTag("Heart");
+        heart[1] = Instantiate(heart[0], new Vector2(-13, -14), Quaternion.identity);
+        heart[2] = Instantiate(heart[0], new Vector2(-12, -14), Quaternion.identity);
+        heart[1].name = "Heart2";
+        heart[2].name = "Heart3";
     }
+
 }
+

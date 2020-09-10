@@ -214,7 +214,7 @@ GameObject:
   - component: {fileID: 415903681}
   m_Layer: 0
   m_Name: Map
-  m_TagString: Untagged
+  m_TagString: map
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -231,7 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a267578a7a661a49ac27f5e1ffbe1a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjects:
+  MapGameObjects:
   - {fileID: 3146240733553748267, guid: 6ecf74abf2fa8bb409b344d1b9dadb97, type: 3}
   - {fileID: 4373933142184241009, guid: b211cffa13e8d644c90f83f75105c276, type: 3}
   - {fileID: 1130280249667663582, guid: 365d62170287c6b43bb9aab684857642, type: 3}
@@ -290,7 +290,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.7607843, g: 0.8784314, b: 0.7772614, a: 0}
+  m_BackGroundColor: {r: 0.9993235, g: 0.9716981, b: 1, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -577,7 +577,7 @@ GameObject:
   - component: {fileID: 1079935171}
   - component: {fileID: 1079935170}
   m_Layer: 0
-  m_Name: Heart
+  m_Name: Heart1
   m_TagString: Heart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

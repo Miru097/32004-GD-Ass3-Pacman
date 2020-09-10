@@ -4,11 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - PowerPellet1
-  - Heart
+  - MapLevel_1
   - Audio_Intro
+  - Heart
   - Audio_Normal
   - SE_notEat
+  - PowerPellet1
+  - map
   layers:
   - Default
   - TransparentFX
