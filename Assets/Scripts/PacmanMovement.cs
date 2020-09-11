@@ -9,10 +9,15 @@ public class PacmanMovement : MonoBehaviour
     private Animator pacmanAnimator = default;
 
     float timeElapsed;
-    float lerpDuration = 4.8f;
+    const float lerpDurationA = 4.8f;
+    const float lerpDurationB = 2f;
+
+    private float oldX;
+    private float newX;
 
     //Move by speed
-    float speed = 2.5f;
+    //float speed = 2.5f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +25,7 @@ public class PacmanMovement : MonoBehaviour
         pacman.transform.position = new Vector2(-13, 14);
         pacmanAnimator = pacman.GetComponent<Animator>();
         pacmanAnimator.SetTrigger("Pacman_TurnRight");
-
+        timeElapsed = 0;
     }
 
     // Update is called once per frame
@@ -31,77 +36,77 @@ public class PacmanMovement : MonoBehaviour
             GameObject.FindWithTag("SE_notEat").GetComponent<AudioSource>().Play();
             switchedOn = true;
         }
-        //move by distance
         if (GameObject.FindWithTag("SE_notEat").GetComponent<AudioSource>().isPlaying == true)
         {
-            if (timeElapsed < lerpDuration)
-            {
-                if (pacman.transform.position.x != -2f && pacman.transform.position.y == 14f)
-                {
-                    pacman.transform.position = Vector3.Lerp(new Vector3(-13f, 14f, 0), new Vector3(-2f, 14f, 0), timeElapsed / lerpDuration);
-                    timeElapsed += Time.deltaTime;
-                }
-                else if (pacman.transform.position.x == -2f && pacman.transform.position.y != 10f)
-                {
-                    pacman.transform.position = Vector3.Lerp(new Vector3(-2f, 14f, 0), new Vector3(-2f, 10f, 0), timeElapsed / 2f);
-                }
-            }
-
-
-
-            /*
-            if(pacman.transform.position.x>=-13 && pacman.transform.position.x<-2&& pacman.transform.position.y == 14)
-            {
-                pacman.transform.position += (Vector3.right * speed * Time.deltaTime);
-                Debug.Log(pacman.transform.position);
-            }
-            if(pacman.transform.position.x==-2 && pacman.transform.position.y <= 14 &&pacman.transform.position.y>10)
-            {
-                pacman.transform.position += (Vector3.down * speed * Time.deltaTime);
-                Debug.Log(pacman.transform.position+"1");
-            }
-            /*
-            if (pacman.transform.position.x != -2 && pacman.transform.position.y == 14)
-            {
-                pacman.transform.position += (Vector3.right * speed*Time.deltaTime);
-            }
-            else if (pacman.transform.position.x == -2 && pacman.transform.position.y != 10)
-            {
-                pacman.transform.position += (Vector3.down * speed * Time.deltaTime);
-            }
-            else if (pacman.transform.position.x != -13 && pacman.transform.position.y == 10)
-            {
-                pacman.transform.position += (Vector3.left * speed * Time.deltaTime);
-            }
-            else
-            {
-                pacman.transform.position += (Vector3.up * speed * Time.deltaTime);
-            }
-            */
-            setTrigger();
+            oldX = pacman.transform.position.x;
+            StartLoop();
+            newX = pacman.transform.position.x;
+            SetTrigger();
         }
-
-
-
-        //move with distance
-        /*
-        if (GameObject.FindWithTag("SE_notEat").GetComponent<AudioSource>().isPlaying == true && timer >= 0.4f)
-        {
-            pacman.transform.position += (direction * speed);
-            timer = 0;
-        }
-        timer += Time.deltaTime;
-        */
     }
-    private void setTrigger()
+    private void StartLoop()
     {
-        if (pacman.transform.position.x == -13 && pacman.transform.position.y == 14)
+
+        if (timeElapsed >= lerpDurationA && timeElapsed < (lerpDurationA + lerpDurationB))
+        {
+            pacman.transform.position = Vector3.Lerp(new Vector3(-2f, 14f, 0), new Vector3(-2f, 10f, 0), (timeElapsed - lerpDurationA) / lerpDurationB);
+            timeElapsed += Time.deltaTime;
+        }
+        if (timeElapsed >= (lerpDurationA + lerpDurationB) && timeElapsed < (lerpDurationA * 2 + lerpDurationB))
+        {
+            pacman.transform.position = Vector3.Lerp(new Vector3(-2f, 10f, 0), new Vector3(-13f, 10f, 0), (timeElapsed - lerpDurationA - lerpDurationB) / lerpDurationA);
+            timeElapsed += Time.deltaTime;
+        }
+        if (timeElapsed >= (lerpDurationA * 2 + lerpDurationB) && timeElapsed < 2 * (lerpDurationA + lerpDurationB))
+        {
+            pacman.transform.position = Vector3.Lerp(new Vector3(-13f, 10f, 0), new Vector3(-13f, 14f, 0), (timeElapsed - lerpDurationA * 2 - lerpDurationB) / lerpDurationB);
+            timeElapsed += Time.deltaTime;
+        }
+        if (timeElapsed >= 0 && timeElapsed < lerpDurationA)
+        {
+            pacman.transform.position = Vector3.Lerp(new Vector3(-13f, 14f, 0), new Vector3(-2f, 14f, 0), timeElapsed / lerpDurationA);
+            timeElapsed += Time.deltaTime;
+        }
+        if (timeElapsed >= 2 * (lerpDurationA + lerpDurationB))
+        {
+            timeElapsed = 0;
+        }
+    }
+    private void SetTrigger()
+    {
+        if (oldX < newX)
         {
             pacmanAnimator.SetTrigger("Pacman_TurnRight");
         }
-        if (pacman.transform.position.x == -2 && pacman.transform.position.y == 10)
+        else
         {
             pacmanAnimator.SetTrigger("Pacman_TurnLeft");
         }
     }
 }
+/*
+if(pacman.transform.position.x>=-13 && pacman.transform.position.x<-2&& pacman.transform.position.y == 14)
+{
+    pacman.transform.position += (Vector3.right * speed * Time.deltaTime);
+}
+if(pacman.transform.position.x==-2 && pacman.transform.position.y <= 14 &&pacman.transform.position.y>10)
+{
+    pacman.transform.position += (Vector3.down * speed * Time.deltaTime);
+}
+if (pacman.transform.position.x != -2 && pacman.transform.position.y == 14)
+{
+    pacman.transform.position += (Vector3.right * speed*Time.deltaTime);
+}
+else if (pacman.transform.position.x == -2 && pacman.transform.position.y != 10)
+{
+    pacman.transform.position += (Vector3.down * speed * Time.deltaTime);
+}
+else if (pacman.transform.position.x != -13 && pacman.transform.position.y == 10)
+{
+    pacman.transform.position += (Vector3.left * speed * Time.deltaTime);
+}
+else
+{
+    pacman.transform.position += (Vector3.up * speed * Time.deltaTime);
+}
+*/
