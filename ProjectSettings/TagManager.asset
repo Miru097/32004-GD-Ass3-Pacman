@@ -12,6 +12,7 @@ TagManager:
   - PowerPellet1
   - map
   - Pacman
+  - border
   layers:
   - Default
   - TransparentFX

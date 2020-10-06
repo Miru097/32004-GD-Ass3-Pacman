@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Pac-man.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: 42e769f160d03154f9ed7c703900f87c
+  - enabled: 1
+    path: Assets/Scenes/Design.unity
+    guid: e4226124e56d43c489cb81973eba6ff0
   m_configObjects: {}
