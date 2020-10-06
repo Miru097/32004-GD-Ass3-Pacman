@@ -13,6 +13,9 @@ TagManager:
   - map
   - Pacman
   - border
+  - AspectRatioText
+  - HUD
+  - GhostScaredTimer
   layers:
   - Default
   - TransparentFX

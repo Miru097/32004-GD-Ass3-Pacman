@@ -68,6 +68,8 @@ public class LevelGenerator : MonoBehaviour
     private void UpperLeft()
     {
         i = 1;
+        x = -14;
+        y = 15;
 
         for (int row = 0; row < Row; row++)
         {
