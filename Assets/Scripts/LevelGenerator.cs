@@ -47,7 +47,7 @@ public class LevelGenerator : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         map = GameObject.FindWithTag("map");
         UpperLeft();
@@ -60,11 +60,6 @@ public class LevelGenerator : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void UpperLeft()
     {
         i = 1;
