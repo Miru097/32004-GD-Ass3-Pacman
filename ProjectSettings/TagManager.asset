@@ -16,6 +16,7 @@ TagManager:
   - AspectRatioText
   - HUD
   - GhostScaredTimer
+  - cherry
   layers:
   - Default
   - TransparentFX
