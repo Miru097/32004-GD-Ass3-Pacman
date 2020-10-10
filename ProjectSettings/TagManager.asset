@@ -9,7 +9,6 @@ TagManager:
   - Heart
   - Audio_Normal
   - SE_notEat
-  - PowerPellet1
   - map
   - Pacman
   - border
@@ -20,6 +19,16 @@ TagManager:
   - Dot
   - WallParticle
   - ScoreText
+  - PowerPellet
+  - GhostScaredTimerText
+  - Ghost1
+  - Ghost2
+  - Ghost3
+  - Ghost4
+  - LiveText
+  - CountDown
+  - GameTimerText
+  - TimeText
   layers:
   - Default
   - TransparentFX

@@ -35,6 +35,11 @@ public class LevelGenerator : MonoBehaviour
 
     private GameObject map = default;
     private GameObject dot = default;
+    private GameObject heart = default;
+    private GameObject[] hearts = new GameObject[3];
+    private GameObject PowerPellet = default;
+    [SerializeField]
+    private GameObject HeartPrefab = default;
     private static int[] RotationLine = {
         15,28,29,42,43,45,48,50,54,56,57,71,85,99,106,107,113,120,121,126,134,140,146,148,160,162,163,174,176,177,193,207};
     private static int[] RotationA = { 1, 31, 36, 87, 92, 95, 149, 179 };//dont move in UpperLeft
@@ -42,20 +47,19 @@ public class LevelGenerator : MonoBehaviour
     private static int[] RotationC = { 59, 64, 70, 101, 109, 127, 135, 154, 190 };//positie90 in UL
     private static int[] RotationD = { 62, 68, 104, 152, 188, 191 };//180 in UL
     private static int Tjuc = 14;
-    private GameObject[] powerPellets = new GameObject[4];
-    private GameObject[] heart = new GameObject[3];
-
+    public RuntimeAnimatorController PowerPelletAnim;
 
     // Start is called before the first frame update
     void Awake()
     {
         map = GameObject.FindWithTag("map");
         dot = GameObject.FindWithTag("Dot");
+        PowerPellet = GameObject.FindWithTag("PowerPellet");
+        heart = GameObject.FindWithTag("Heart");
         UpperLeft();
         UpperRight();
         LowerLeft();
         LowerRight();
-        PowerPellets();
         Heart();
 
     }
@@ -72,13 +76,23 @@ public class LevelGenerator : MonoBehaviour
             for (int column = 0; column < Column; column++)
             {
                 upperLeft[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x + column, y - row), Quaternion.identity);
-                if(levelMap[row, column] == 5)
+                if (levelMap[row, column] == 5)
                 {
                     upperLeft[i].transform.parent = dot.transform;
                     upperLeft[i].AddComponent<BoxCollider2D>();
-                    upperLeft[i].GetComponent<BoxCollider2D>().offset = new Vector2(0,0);
+                    upperLeft[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
                     upperLeft[i].GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.5f);
                     upperLeft[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                }
+                else if (levelMap[row, column] == 6)
+                {
+                    upperLeft[i].transform.parent = PowerPellet.transform;
+                    upperLeft[i].AddComponent<BoxCollider2D>();
+                    upperLeft[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
+                    upperLeft[i].GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
+                    upperLeft[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                    upperLeft[i].AddComponent<Animator>();
+                    upperLeft[i].GetComponent<Animator>().runtimeAnimatorController = PowerPelletAnim as RuntimeAnimatorController;
                 }
                 else
                 {
@@ -88,7 +102,6 @@ public class LevelGenerator : MonoBehaviour
                 i++;
             }
         }
-        Destroy(upperLeft[44]);
         foreach (int i in RotationLine)
         {
             upperLeft[i].transform.rotation = Quaternion.Euler(0f, 0f, 90.0f);
@@ -116,7 +129,6 @@ public class LevelGenerator : MonoBehaviour
             for (int column = 0; column < Column; column++)
             {
                 upperRight[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x - column, y - row), Quaternion.identity);
-                //upperRight[i].transform.parent = map.transform;
                 if (levelMap[row, column] == 5)
                 {
                     upperRight[i].transform.parent = dot.transform;
@@ -125,16 +137,24 @@ public class LevelGenerator : MonoBehaviour
                     upperRight[i].GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.5f);
                     upperRight[i].GetComponent<BoxCollider2D>().isTrigger = true;
                 }
+                else if(levelMap[row, column] == 6)
+                {
+                    upperRight[i].transform.parent = PowerPellet.transform;
+                    upperRight[i].AddComponent<BoxCollider2D>();
+                    upperRight[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
+                    upperRight[i].GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
+                    upperRight[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                    upperRight[i].AddComponent<Animator>();
+                    upperRight[i].GetComponent<Animator>().runtimeAnimatorController = PowerPelletAnim as RuntimeAnimatorController;
+                }
                 else
                 {
                     upperRight[i].transform.parent = map.transform;
                 }
                 upperRight[i].name = "MapUpperRight" + i;
-                //upperRight[i].GetComponent<SpriteRenderer>().flipX = true;
                 if (i <= 210) i++;
             }
         }
-        Destroy(upperRight[44]);
         foreach (int i in RotationLine)
         {
             upperRight[i].transform.Rotate(0f, 0f, -90.0f);
@@ -174,6 +194,16 @@ public class LevelGenerator : MonoBehaviour
                     lowerLeft[i].GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.5f);
                     lowerLeft[i].GetComponent<BoxCollider2D>().isTrigger = true;
                 }
+                else if(levelMap[row, column] == 6)
+                {
+                    lowerLeft[i].transform.parent = PowerPellet.transform;
+                    lowerLeft[i].AddComponent<BoxCollider2D>();
+                    lowerLeft[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
+                    lowerLeft[i].GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
+                    lowerLeft[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                    lowerLeft[i].AddComponent<Animator>();
+                    lowerLeft[i].GetComponent<Animator>().runtimeAnimatorController = PowerPelletAnim as RuntimeAnimatorController;
+                }
                 else
                 {
                     lowerLeft[i].transform.parent = map.transform;
@@ -182,7 +212,6 @@ public class LevelGenerator : MonoBehaviour
                 if (i < lowerLeft.Length) i++;
             }
         }
-        Destroy(lowerLeft[44]);
         lowerLeft[Tjuc].GetComponent<SpriteRenderer>().flipY = true;
         Destroy(lowerLeft[182]);
         lowerLeft[182] = Instantiate(MapGameObjects[4], new Vector3(-1, -1), Quaternion.identity);
@@ -218,7 +247,6 @@ public class LevelGenerator : MonoBehaviour
             for (int column = 0; column < Column; column++)
             {
                 lowerRight[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x - column, y + row), Quaternion.identity);
-                //lowerRight[i].transform.parent = map.transform;
                 if (levelMap[row, column] == 5)
                 {
                     lowerRight[i].transform.parent = dot.transform;
@@ -226,6 +254,16 @@ public class LevelGenerator : MonoBehaviour
                     lowerRight[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
                     lowerRight[i].GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.5f);
                     lowerRight[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                }
+                else if(levelMap[row, column] == 6)
+                {
+                    lowerRight[i].transform.parent = PowerPellet.transform;
+                    lowerRight[i].AddComponent<BoxCollider2D>();
+                    lowerRight[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
+                    lowerRight[i].GetComponent<BoxCollider2D>().size = new Vector2(1f, 1f);
+                    lowerRight[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                    lowerRight[i].AddComponent<Animator>();
+                    lowerRight[i].GetComponent<Animator>().runtimeAnimatorController = PowerPelletAnim as RuntimeAnimatorController;
                 }
                 else
                 {
@@ -235,7 +273,7 @@ public class LevelGenerator : MonoBehaviour
                 if (i <= 210) i++;
             }
         }
-        Destroy(lowerRight[44]);
+        //Destroy(lowerRight[44]);
         lowerRight[Tjuc].GetComponent<SpriteRenderer>().flipX = true;
         lowerRight[Tjuc].GetComponent<SpriteRenderer>().flipY = true;
         Destroy(lowerRight[182]);
@@ -261,26 +299,14 @@ public class LevelGenerator : MonoBehaviour
             lowerRight[i].transform.Rotate(0f, 0f, 90f);
         }
     }
-    private void PowerPellets()
-    {
-        powerPellets[0] = GameObject.FindWithTag("PowerPellet1");
-        powerPellets[1] = Instantiate(powerPellets[0], new Vector2(12, 12), Quaternion.identity);
-        powerPellets[2] = Instantiate(powerPellets[0], new Vector2(-13, -10), Quaternion.identity);
-        powerPellets[3] = Instantiate(powerPellets[0], new Vector2(12, -10), Quaternion.identity);
-        for(i = 1; i < 4; i++)
-        {
-            int a = i + 1;
-            powerPellets[i].name = "PowerPellets" + a;
-        }
-    }
-
     private void Heart()
     {
-        heart[0] = GameObject.FindWithTag("Heart");
-        heart[1] = Instantiate(heart[0], new Vector2(-13, -14), Quaternion.identity);
-        heart[2] = Instantiate(heart[0], new Vector2(-12, -14), Quaternion.identity);
-        heart[1].name = "Heart2";
-        heart[2].name = "Heart3";
+        for (int i = 0; i < 3; i++)
+        {
+            hearts[i] = Instantiate(HeartPrefab, new Vector2(-14 + i, -14), Quaternion.identity);
+            hearts[i].transform.parent = heart.transform;
+            hearts[i].name = "Heart" + i;
+        }
     }
 
 }
