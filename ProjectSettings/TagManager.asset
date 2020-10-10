@@ -17,6 +17,9 @@ TagManager:
   - HUD
   - GhostScaredTimer
   - cherry
+  - Dot
+  - WallParticle
+  - ScoreText
   layers:
   - Default
   - TransparentFX

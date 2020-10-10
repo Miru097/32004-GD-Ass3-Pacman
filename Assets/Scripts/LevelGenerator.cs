@@ -34,7 +34,7 @@ public class LevelGenerator : MonoBehaviour
     private GameObject[] lowerRight = new GameObject[197];
 
     private GameObject map = default;
-
+    private GameObject dot = default;
     private static int[] RotationLine = {
         15,28,29,42,43,45,48,50,54,56,57,71,85,99,106,107,113,120,121,126,134,140,146,148,160,162,163,174,176,177,193,207};
     private static int[] RotationA = { 1, 31, 36, 87, 92, 95, 149, 179 };//dont move in UpperLeft
@@ -50,6 +50,7 @@ public class LevelGenerator : MonoBehaviour
     void Awake()
     {
         map = GameObject.FindWithTag("map");
+        dot = GameObject.FindWithTag("Dot");
         UpperLeft();
         UpperRight();
         LowerLeft();
@@ -71,7 +72,18 @@ public class LevelGenerator : MonoBehaviour
             for (int column = 0; column < Column; column++)
             {
                 upperLeft[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x + column, y - row), Quaternion.identity);
-                upperLeft[i].transform.parent = map.transform;
+                if(levelMap[row, column] == 5)
+                {
+                    upperLeft[i].transform.parent = dot.transform;
+                    upperLeft[i].AddComponent<BoxCollider2D>();
+                    upperLeft[i].GetComponent<BoxCollider2D>().offset = new Vector2(0,0);
+                    upperLeft[i].GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.5f);
+                    upperLeft[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                }
+                else
+                {
+                    upperLeft[i].transform.parent = map.transform;
+                }
                 upperLeft[i].name = "MapUpperLeft" + i;
                 i++;
             }
@@ -104,7 +116,19 @@ public class LevelGenerator : MonoBehaviour
             for (int column = 0; column < Column; column++)
             {
                 upperRight[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x - column, y - row), Quaternion.identity);
-                upperRight[i].transform.parent = map.transform;
+                //upperRight[i].transform.parent = map.transform;
+                if (levelMap[row, column] == 5)
+                {
+                    upperRight[i].transform.parent = dot.transform;
+                    upperRight[i].AddComponent<BoxCollider2D>();
+                    upperRight[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
+                    upperRight[i].GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.5f);
+                    upperRight[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                }
+                else
+                {
+                    upperRight[i].transform.parent = map.transform;
+                }
                 upperRight[i].name = "MapUpperRight" + i;
                 //upperRight[i].GetComponent<SpriteRenderer>().flipX = true;
                 if (i <= 210) i++;
@@ -141,7 +165,19 @@ public class LevelGenerator : MonoBehaviour
             for (int column = 0; column < Column; column++)
             {
                 lowerLeft[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x + column, y + row), Quaternion.identity);
-                lowerLeft[i].transform.parent = map.transform;
+                //lowerLeft[i].transform.parent = map.transform;
+                if (levelMap[row, column] == 5)
+                {
+                    lowerLeft[i].transform.parent = dot.transform;
+                    lowerLeft[i].AddComponent<BoxCollider2D>();
+                    lowerLeft[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
+                    lowerLeft[i].GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.5f);
+                    lowerLeft[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                }
+                else
+                {
+                    lowerLeft[i].transform.parent = map.transform;
+                }
                 lowerLeft[i].name = "MapLowerLeft" + i;
                 if (i < lowerLeft.Length) i++;
             }
@@ -182,7 +218,19 @@ public class LevelGenerator : MonoBehaviour
             for (int column = 0; column < Column; column++)
             {
                 lowerRight[i] = Instantiate(MapGameObjects[levelMap[row, column]], new Vector2(x - column, y + row), Quaternion.identity);
-                lowerRight[i].transform.parent = map.transform;
+                //lowerRight[i].transform.parent = map.transform;
+                if (levelMap[row, column] == 5)
+                {
+                    lowerRight[i].transform.parent = dot.transform;
+                    lowerRight[i].AddComponent<BoxCollider2D>();
+                    lowerRight[i].GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
+                    lowerRight[i].GetComponent<BoxCollider2D>().size = new Vector2(0.5f, 0.5f);
+                    lowerRight[i].GetComponent<BoxCollider2D>().isTrigger = true;
+                }
+                else
+                {
+                    lowerRight[i].transform.parent = map.transform;
+                }
                 lowerRight[i].name = "MapLowerRight" + i;
                 if (i <= 210) i++;
             }

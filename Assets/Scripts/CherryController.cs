@@ -7,7 +7,7 @@ public class CherryController : MonoBehaviour
     public GameObject cherry;
     private Tweener tweener;
     private float duration = 10f;
-    private GameObject bonusCherry;
+    public GameObject bonusCherry;
     // Start is called before the first frame update
     float CamX;
     float CamY;
@@ -74,8 +74,14 @@ public class CherryController : MonoBehaviour
         {
             cheeryPosition = new Vector2(-CamX, Random.Range(-CamY, CamY));
         }
-        Debug.Log(cheeryPosition);
         bonusCherry = Instantiate(cherry, cheeryPosition, Quaternion.identity);
+        bonusCherry.AddComponent<BoxCollider2D>();
+        bonusCherry.GetComponent<BoxCollider2D>().offset = new Vector2(0, 0);
+        bonusCherry.GetComponent<BoxCollider2D>().size = new Vector2(1.21f, 1.21f);
+        bonusCherry.GetComponent<BoxCollider2D>().isTrigger = true;
+        //bonusCherry.transform.position = new Vector2(-20, 14);
+        //tweener.AddTween(bonusCherry.transform, bonusCherry.transform.position, new Vector2(20,14), duration);
         tweener.AddTween(bonusCherry.transform, bonusCherry.transform.position, new Vector2(-0.5f-cheeryPosition.x,-cheeryPosition.y), duration);
     }
+
 }

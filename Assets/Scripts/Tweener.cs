@@ -10,7 +10,7 @@ public class Tweener : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (activeTween != null)
+        if (activeTween != null&&activeTween.Target!=null)
         {
             if (Vector3.Distance(activeTween.Target.position, activeTween.EndPos) > 0.1f)
             {

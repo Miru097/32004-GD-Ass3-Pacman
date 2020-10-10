@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PacStudentController : MonoBehaviour
 {
@@ -15,7 +16,10 @@ public class PacStudentController : MonoBehaviour
     private bool mapAudio = false;
     RaycastHit2D hitRecord = default;
     public ParticleSystem dust;
-   
+    public ParticleSystem wall;
+    private Vector2 wallParticlePosition;
+    int Score = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,45 +29,66 @@ public class PacStudentController : MonoBehaviour
         lastInput = null;
         currentInput = null;
         lastCurrentInput = null;
+        wall.Stop();
+        Score = 0;
+        PlayerPrefs.SetInt("Score", 0);
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
-        
-        setAnimator();
+
+        SetAnimator();
         //if (GameObject.FindWithTag("Audio_Intro").GetComponent<AudioSource>().isPlaying == false)
         //{
         InputRecord();
         if ((Vector2)transform.position == nextPosition)
         {
-            currentRecord();
-            movePacmant();
-            moveAudio();
+            CurrentRecord();
+            MovePacman();
+            MoveAudio();
         }
+
         //}
     }
     private bool Valid(Vector2 dir)
     {
         Vector2 pos = transform.position;
         RaycastHit2D hit = Physics2D.Linecast(pos + dir, pos);
+        wallParticlePosition = pos + dir;
         hitRecord = hit;
-        return (hit.collider == GetComponent<Collider2D>());
+        return (hit.collider.gameObject.name != "Map");
+        //return (hit.collider == GetComponent<Collider2D>());
+
+
     }
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collision Enter:" + collision.gameObject.name + ":" + collision.contacts[0].point);
     }
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Trigger Exit:" + other.gameObject.name + ":" + other.gameObject.transform.position);
+        if (collision.gameObject.name != "Cherry(Clone)")
+        {
+            Destroy(GameObject.Find(collision.gameObject.name));
+            Score += 10;
+            PlayerPrefs.SetInt("Score", Score);
+        }
+        if (collision.gameObject.name == "Cherry(Clone)")
+        {
+            Destroy(GameObject.Find("Cherry(Clone)"));
+            Score += 100;
+            PlayerPrefs.SetInt("Score", Score);
+        }
+
     }
-    private void setAnimator()
+    private void SetAnimator()
     {
         if (!hitRecord || (hitRecord && hitRecord.collider.gameObject.name == "Map"))
         {
             GetComponent<Animator>().enabled = false;
             dust.Stop();
+
         }
         else
         {
@@ -71,6 +96,7 @@ public class PacStudentController : MonoBehaviour
             if (!dust.isPlaying)
             {
                 dust.Play();
+                wall.Stop();
             }
         }
     }
@@ -93,7 +119,7 @@ public class PacStudentController : MonoBehaviour
             lastInput = "D";
         }
     }
-    private void currentRecord()
+    private void CurrentRecord()
     {
         if (lastInput == "W")
         {
@@ -129,7 +155,7 @@ public class PacStudentController : MonoBehaviour
             lastCurrentInput = currentInput;
         }
     }
-    private void movePacmant()
+    private void MovePacman()
     {
         if (currentInput == "W" && Valid(Vector2.up))
         {
@@ -150,6 +176,10 @@ public class PacStudentController : MonoBehaviour
         }
         if (currentInput == "D" && Valid(Vector2.right))
         {
+            if ((Vector2)transform.position == new Vector2(12f, 1f))
+            {
+                transform.position = new Vector2(-13f, 1f);
+            }
             nextPosition = (Vector2)transform.position + Vector2.right;
 
         }
@@ -157,7 +187,7 @@ public class PacStudentController : MonoBehaviour
         Vector2 dir = nextPosition - (Vector2)transform.position;
         GetComponent<Animator>().SetFloat("DirX", dir.x);
     }
-    private void moveAudio()
+    private void MoveAudio()
     {
         if (hitRecord)
         {
@@ -166,17 +196,23 @@ public class PacStudentController : MonoBehaviour
                 pacMoveSource.clip = pacMoveClips[2];
                 pacMoveSource.Play();
                 mapAudio = false;
+                wall.transform.position = wallParticlePosition;
+                wall.Play();
             }
             else
             {
-                if (pacMoveSource.isPlaying == false && hitRecord.collider.gameObject.name != "Map")
+                if (pacMoveSource.isPlaying == false && hitRecord.collider.gameObject.name != "Map" && hitRecord.collider.gameObject.name != "Pacman")
                 {
                     pacMoveSource.clip = pacMoveClips[0];
                     pacMoveSource.Play();
                 }
+                if (pacMoveSource.isPlaying == false && hitRecord.collider.gameObject.name != "Map" && hitRecord.collider.gameObject.name == "Pacman")
+                {
+                    pacMoveSource.clip = pacMoveClips[1];
+                    pacMoveSource.Play();
+                }
             }
         }
-
     }
 }
 

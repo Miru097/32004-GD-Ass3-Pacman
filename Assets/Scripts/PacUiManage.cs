@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,27 +9,22 @@ public class PacUiManage : MonoBehaviour
 {
     Text aspectRatio = default;
     GameObject GhostScaredTimer = default;
+    Text ScoreText = default;
     // Start is called before the first frame update
     void Start()
     {
         aspectRatio = GameObject.FindGameObjectWithTag("AspectRatioText").GetComponent<Text>();
         GhostScaredTimer = GameObject.FindGameObjectWithTag("GhostScaredTimer");
         GhostScaredTimer.SetActive(false);
+        ScoreText = GameObject.FindGameObjectWithTag("ScoreText").GetComponent<Text>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Camera.main.aspect >1.34)
-        {
-            aspectRatio.text = "16:9";
-        }
-        else
-        {
-            aspectRatio.text = "4:3";
-        }
-        
-        
+        ChangeAspect();
+        if (GameObject.FindWithTag("Audio_Intro").GetComponent<AudioSource>().isPlaying == false)
+            ScoreUpdate();
     }
     public void LoadMenuLevel()
     {
@@ -36,6 +32,17 @@ public class PacUiManage : MonoBehaviour
     }
     public void ChangeAspect()
     {
-       
+        if (Camera.main.aspect > 1.34)
+        {
+            aspectRatio.text = "16:9";
+        }
+        else
+        {
+            aspectRatio.text = "4:3";
+        }
+    }
+    public void ScoreUpdate()
+    {
+        ScoreText.text = Convert.ToString( PlayerPrefs.GetInt("Score"));
     }
 }
