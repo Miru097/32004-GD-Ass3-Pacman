@@ -11,9 +11,9 @@ public class PacStudentController : MonoBehaviour
 {
     private Vector2 nextPosition = Vector2.zero;
     private Tweener tweener;
-    private float duration = 0.1f;
+    private float duration = 0.24f;
     private string lastInput = default;
-    private string currentInput = default;
+    public string currentInput = default;
     private string lastCurrentInput = default;
     public AudioSource pacMoveSource = default;
     public AudioClip[] pacMoveClips = new AudioClip[3];
@@ -28,8 +28,9 @@ public class PacStudentController : MonoBehaviour
     public AudioClip[] ghostMoveClips = new AudioClip[3];
     [SerializeField] private GameObject[] ghosts = new GameObject[4];
     private int GhostScaredTotalTime = 10;
-    private int[] GhostDeadTotalTime = new int[4];
+    public int[] GhostDeadTotalTime = new int[4];
     private GameObject GhostScaredTimer = default;
+    public bool GhostScaredTimerFlag = false;
     private GameObject GhostScaredTimerText = default;
     private GameObject RoundTimerText = default;
     private GameObject LiveText = default;
@@ -37,9 +38,9 @@ public class PacStudentController : MonoBehaviour
     private bool ghostNormalSwitchedOn = false;
     private bool ghostScaredSwitchedOn = false;
     private bool ghostDeadSwitchedOn = false;
-    private bool ghostRecoveringFlag = false;
+    public bool ghostRecoveringFlag = false;
     private bool gameOverFlag = false;
-    private bool[] ghostDeadFlag = new bool[4];
+    public bool[] ghostDeadFlag = new bool[4];
     private bool[] deadOnce = new bool[4];
     private int RoundTotalTime = 3;
     private float Timer;
@@ -49,6 +50,16 @@ public class PacStudentController : MonoBehaviour
     private float gameOverCountDown;
     private GameObject dot;
     private GameObject PowerPellet;
+    private void Awake()
+    {
+        GhostScaredTimer = GameObject.FindGameObjectWithTag("GhostScaredTimer");
+        GhostScaredTimerText = GameObject.FindGameObjectWithTag("GhostScaredTimerText");
+        RoundTimerText = GameObject.FindGameObjectWithTag("CountDown");
+        LiveText = GameObject.FindGameObjectWithTag("LiveText");
+        GameTimerText = GameObject.FindGameObjectWithTag("GameTimerText");
+        dot = GameObject.FindWithTag("Dot");
+        PowerPellet = GameObject.FindWithTag("PowerPellet");
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -60,13 +71,6 @@ public class PacStudentController : MonoBehaviour
         lastCurrentInput = null;
         wall.Stop();
         dead.Stop();
-        GhostScaredTimer = GameObject.FindGameObjectWithTag("GhostScaredTimer");
-        GhostScaredTimerText = GameObject.FindGameObjectWithTag("GhostScaredTimerText");
-        RoundTimerText = GameObject.FindGameObjectWithTag("CountDown");
-        LiveText = GameObject.FindGameObjectWithTag("LiveText");
-        GameTimerText = GameObject.FindGameObjectWithTag("GameTimerText");
-        dot = GameObject.FindWithTag("Dot");
-        PowerPellet = GameObject.FindWithTag("PowerPellet");
         Score = 0;
         PlayerPrefs.SetInt("Score", 0);
         gameOverFlag = false;
@@ -81,7 +85,7 @@ public class PacStudentController : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    void Update()
     {
         if (RoundTotalTime == 0 && !gameOverFlag)
         {
@@ -126,30 +130,44 @@ public class PacStudentController : MonoBehaviour
                 {
                     StopCoroutine("GhostScaredCountDown");
                     GhostScaredTotalTime = 10;
+                    GhostScaredTimerFlag = false;
                     GhostScaredTimer.SetActive(false);
+                    ghostRecoveringFlag = false;
                     for (int i = 0; i < 4; i++)
                     {
                         if (!ghostDeadFlag[i])
+                        {
+                            ghosts[i].GetComponent<Animator>().SetFloat("DirX", 1);
                             ghosts[i].GetComponent<Animator>().SetTrigger("Normal");
+                        }
+                            
                         deadOnce[i] = false;
                     }
                     ghostNormalSwitchedOn = false;
                     ghostScaredSwitchedOn = false;
                 }
-                if (GhostScaredTotalTime == 3 & ghostRecoveringFlag == false)
+                if (GhostScaredTotalTime <= 3 && ghostRecoveringFlag == false)
                 {
-                    ghostRecoveringFlag = true;
                     for (int i = 0; i < 4; i++)
                     {
                         if (!ghostDeadFlag[i])
+                        {
+                            ghosts[i].GetComponent<Animator>().SetFloat("DirX", 0);
+                            ghosts[i].GetComponent<Animator>().SetFloat("DirY", 0);
+                            ghosts[i].GetComponent<Animator>().ResetTrigger("Scared");
                             ghosts[i].GetComponent<Animator>().SetTrigger("Recovering");
+                        }
+                            
                     }
+                    ghostRecoveringFlag = true;
                 }
                 for (int i = 0; i < 4; i++)
                 {
                     if (GhostDeadTotalTime[i] == 0)
                     {
                         ghostDeadFlag[i] = false;
+                        ghosts[i].GetComponent<Animator>().SetFloat("DirX", 0);
+                        ghosts[i].GetComponent<Animator>().SetFloat("DirY", 0);
                         ghosts[i].GetComponent<Animator>().SetTrigger("Normal");
                         GhostDeadTotalTime[i] = 5;
                     }
@@ -161,7 +179,16 @@ public class PacStudentController : MonoBehaviour
                     {
                         ghostMoveSource.clip = ghostMoveClips[1];
                         ghostMoveSource.Play();
+                        ghostNormalSwitchedOn = false;
                         ghostScaredSwitchedOn = true;
+                        ghostDeadSwitchedOn = false;
+                    }
+                    if(GhostScaredTotalTime == 10&&!ghostNormalSwitchedOn&&!ghostScaredSwitchedOn&&ghostDeadSwitchedOn)
+                    {
+                        ghostMoveSource.clip = ghostMoveClips[0];
+                        ghostMoveSource.Play();
+                        ghostNormalSwitchedOn = true;
+                        ghostScaredSwitchedOn = false;
                         ghostDeadSwitchedOn = false;
                     }
                 }
@@ -186,7 +213,6 @@ public class PacStudentController : MonoBehaviour
         wallParticlePosition = pos + dir;
         hitRecord = hit;
         return (hit.collider.gameObject.name != "Map");
-        //return (hit.collider == GetComponent<Collider2D>());
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -196,11 +222,6 @@ public class PacStudentController : MonoBehaviour
                 collision.gameObject.name == "MapLowerLeft44" || collision.gameObject.name == "MapLowerRight44"))
             {
                 Destroy(GameObject.Find(collision.gameObject.name));
-                for (int i = 0; i < 4; i++)
-                {
-                    if (!ghostDeadFlag[i])
-                        ghosts[i].GetComponent<Animator>().SetTrigger("Scared");
-                }
                 if (ghostNormalSwitchedOn && !ghostDeadSwitchedOn && !ghostScaredSwitchedOn)
                 {
                     ghostMoveSource.clip = ghostMoveClips[1];
@@ -208,14 +229,26 @@ public class PacStudentController : MonoBehaviour
                     ghostNormalSwitchedOn = false;
                     ghostScaredSwitchedOn = true;
                 }
-                GhostScaredTotalTime = 10;
+                StopCoroutine("GhostScaredCountDown");
                 ghostRecoveringFlag = false;
+                GhostScaredTotalTime = 10;
+                GhostScaredTimerFlag = true;
+                for (int i = 0; i < 4; i++)
+                {
+                    if (!ghostDeadFlag[i])
+                    {
+                        ghosts[i].GetComponent<Animator>().SetFloat("DirX", 0);
+                        ghosts[i].GetComponent<Animator>().SetFloat("DirY", 0);
+                        ghosts[i].GetComponent<Animator>().SetTrigger("Scared");
+                    }
+                        
+                }
                 StartCoroutine("GhostScaredCountDown");
                 GhostScaredTimer.SetActive(true);
             }
             else if (collision.gameObject.name != "Cherry(Clone)" && collision.gameObject.name == "Ghost1")
             {
-                if ((GhostScaredTotalTime == 10 && !ghostDeadFlag[0]) || (GhostScaredTotalTime != 10 && deadOnce[0] && !ghostDeadFlag[0]))
+                if ((!GhostScaredTimerFlag && !ghostDeadFlag[0]) || (GhostScaredTotalTime != 10 && deadOnce[0] && !ghostDeadFlag[0]))
                 {
                     GhostWalkingState();
                 }
@@ -227,7 +260,7 @@ public class PacStudentController : MonoBehaviour
             }
             else if (collision.gameObject.name != "Cherry(Clone)" && collision.gameObject.name == "Ghost2")
             {
-                if ((GhostScaredTotalTime == 10 && !ghostDeadFlag[1]) || (GhostScaredTotalTime != 10 && !ghostDeadFlag[1] && deadOnce[1]))
+                if ((!GhostScaredTimerFlag && !ghostDeadFlag[1]) || (GhostScaredTotalTime != 10 && !ghostDeadFlag[1] && deadOnce[1]))
                 {
                     GhostWalkingState();
                 }
@@ -239,7 +272,7 @@ public class PacStudentController : MonoBehaviour
             }
             else if (collision.gameObject.name != "Cherry(Clone)" && collision.gameObject.name == "Ghost3")
             {
-                if ((GhostScaredTotalTime == 10 && !ghostDeadFlag[2]) || (GhostScaredTotalTime != 10 && deadOnce[2]) && !ghostDeadFlag[2])
+                if ((!GhostScaredTimerFlag && !ghostDeadFlag[2]) || (GhostScaredTotalTime != 10 && deadOnce[2]) && !ghostDeadFlag[2])
                 {
                     GhostWalkingState();
                 }
@@ -251,7 +284,7 @@ public class PacStudentController : MonoBehaviour
             }
             else if (collision.gameObject.name != "Cherry(Clone)" && collision.gameObject.name == "Ghost4")
             {
-                if ((GhostScaredTotalTime == 10 && !ghostDeadFlag[3]) || (GhostScaredTotalTime != 10 && deadOnce[3] && !ghostDeadFlag[3]))
+                if ((!GhostScaredTimerFlag && !ghostDeadFlag[3]) || (GhostScaredTotalTime != 10 && deadOnce[3] && !ghostDeadFlag[3]))
                 {
                     GhostWalkingState();
                 }
@@ -375,7 +408,6 @@ public class PacStudentController : MonoBehaviour
                 transform.position = new Vector2(-13f, 1f);
             }
             nextPosition = (Vector2)transform.position + Vector2.right;
-
         }
         if (currentInput != null)
         {
@@ -419,16 +451,19 @@ public class PacStudentController : MonoBehaviour
         {
             LiveText.GetComponent<Text>().text = Convert.ToString(Convert.ToInt32(LiveText.GetComponent<Text>().text) - 1);
             Destroy(GameObject.Find("Heart" + LiveText.GetComponent<Text>().text));
-            dead.transform.position = wallParticlePosition;
+            dead.transform.position = transform.position;
             dead.Play();
             lastInput = null;
             currentInput = null;
             lastCurrentInput = null;
             tweener.AddTween(transform, transform.position, new Vector2(-13, 14), 0);
+            if (wall.isPlaying)
+                wall.Stop();
             nextPosition = new Vector2(-13, 14);
         }
         else
         {
+            LiveText.GetComponent<Text>().text = Convert.ToString(Convert.ToInt32(LiveText.GetComponent<Text>().text) - 1);
             Destroy(GameObject.Find("Heart0"));
             GameOver();
         }
@@ -436,6 +471,8 @@ public class PacStudentController : MonoBehaviour
     }
     private void GhostScaredState(int i)
     {
+        ghosts[i].GetComponent<Animator>().SetFloat("DirX", 0);
+        ghosts[i].GetComponent<Animator>().SetFloat("DirY", 0);
         ghosts[i].GetComponent<Animator>().SetTrigger("Dead");
         ghostDeadFlag[i] = true;
         deadOnce[i] = true;
@@ -443,6 +480,7 @@ public class PacStudentController : MonoBehaviour
         {
             ghostMoveSource.clip = ghostMoveClips[2];
             ghostMoveSource.Play();
+            ghostNormalSwitchedOn = false;
             ghostScaredSwitchedOn = false;
             ghostDeadSwitchedOn = true;
         }
@@ -531,7 +569,6 @@ public class PacStudentController : MonoBehaviour
         if (PowerPellet.transform.childCount==0&& dot.transform.childCount == 0)
         {
             GameOver();
-            
         }
     }
 }

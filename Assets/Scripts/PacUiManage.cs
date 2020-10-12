@@ -10,13 +10,17 @@ public class PacUiManage : MonoBehaviour
     Text aspectRatio = default;
     GameObject GhostScaredTimer = default;
     Text ScoreText = default;
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         aspectRatio = GameObject.FindGameObjectWithTag("AspectRatioText").GetComponent<Text>();
         GhostScaredTimer = GameObject.FindGameObjectWithTag("GhostScaredTimer");
         GhostScaredTimer.SetActive(false);
         ScoreText = GameObject.FindGameObjectWithTag("ScoreText").GetComponent<Text>();
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
