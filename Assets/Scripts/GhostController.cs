@@ -97,9 +97,17 @@ public class GhostController : MonoBehaviour
     }
     private void GhostOneMove()
     {
+
+
+
+
+
+
+
+
         if (direction[0] == -1)
         {
-            
+
             do
             {
                 directionNew[0] = Random.Range(0, 4);
@@ -258,49 +266,49 @@ public class GhostController : MonoBehaviour
             }
             else
             {
-                
+
                 if (Pacman.GetComponent<PacStudentController>().currentInput == "W")
                 {
                     if (Valid(Vector2.up, 0) && direction[0] != 1)
                     {
                         nextPosition[0] = (Vector2)Ghost[0].transform.position + Vector2.up;
-                        directionNew[0] = direction[0]=0;
+                        directionNew[0] = direction[0] = 0;
                     }
                     else
                     {
                         GhostOneCheckPoint();
                     }
                 }
-                if (Pacman.GetComponent<PacStudentController>().currentInput == "S" )
+                if (Pacman.GetComponent<PacStudentController>().currentInput == "S")
                 {
                     if (Valid(Vector2.down, 0) && direction[0] != 0)
                     {
                         nextPosition[0] = (Vector2)Ghost[0].transform.position + Vector2.down;
-                        directionNew[0] = direction[0]=1;
+                        directionNew[0] = direction[0] = 1;
                     }
                     else
                     {
                         GhostOneCheckPoint();
                     }
                 }
-                if (Pacman.GetComponent<PacStudentController>().currentInput == "A" )
+                if (Pacman.GetComponent<PacStudentController>().currentInput == "A")
                 {
                     if (Valid(Vector2.left, 0) && direction[0] != 3)
                     {
                         nextPosition[0] = (Vector2)Ghost[0].transform.position + Vector2.left;
-                        directionNew[0] = direction[0]=2;
+                        directionNew[0] = direction[0] = 2;
                     }
                     else
                     {
                         GhostOneCheckPoint();
                     }
                 }
-                if (Pacman.GetComponent<PacStudentController>().currentInput == "D" )
+                if (Pacman.GetComponent<PacStudentController>().currentInput == "D")
                 {
                     if (Valid(Vector2.right, 0) && direction[0] != 2)
                     {
                         nextPosition[0] = (Vector2)Ghost[0].transform.position + Vector2.right;
-                        directionNew[0] = direction[0]=3;
+                        directionNew[0] = direction[0] = 3;
                     }
                     else
                     {
@@ -648,8 +656,6 @@ public class GhostController : MonoBehaviour
     {
         Vector2 pos = Ghost[i].transform.position;
         RaycastHit2D hit = Physics2D.Linecast(pos + dir, pos);
-        //wallParticlePosition = pos + dir;
-        //hitRecord = hit;
         if (hit.collider.gameObject.name == "Teleport")
         {
             return (false);

@@ -572,6 +572,7 @@ MonoBehaviour:
   - {fileID: 2061006497}
   - {fileID: 129864783}
   - {fileID: 1409146875}
+  GhostDeadTotalTime: 00000000000000000000000000000000
   GhostScaredTimerFlag: 0
   ghostRecoveringFlag: 0
   ghostDeadFlag: 00000000
@@ -18978,7 +18979,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121519434}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4dba09c10dce46499974f72a387e2a8, type: 3}
   m_Name: 
@@ -18990,7 +18991,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121519434}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0092f2ff999cc44449ebaebad2d02051, type: 3}
   m_Name: 
